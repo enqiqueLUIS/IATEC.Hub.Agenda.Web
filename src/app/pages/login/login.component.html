@@ -1,0 +1,65 @@
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8" style="background-color: #f3f4f6;">
+  <div class="max-w-md w-full">
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-bold" style="color: #111827;">Bienvenido</h2>
+      <p class="mt-2 text-sm" style="color: #4b5563;">Sistema de Gestión de Agenda</p>
+    </div>
+
+    <div class="rounded-xl shadow-sm p-8" style="background-color: white; border: 1px solid #e5e7eb;">
+      <form class="space-y-5" (ngSubmit)="onSubmit()">
+        @if (error()) {
+          <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
+            {{ error() }}
+          </div>
+        }
+
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+          <p class="text-xs text-blue-800 mb-2">Credenciales de prueba:</p>
+          <button
+            type="button"
+            (click)="fillTestCredentials()"
+            class="text-xs text-blue-600 hover:text-blue-800 underline"
+          >
+            admin&#64;agenda.com / admin123
+          </button>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+          <input
+            type="text"
+            name="email"
+            [(ngModel)]="email"
+            placeholder="admin@agenda.com"
+            [disabled]="loading()"
+            class="block w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+          <input
+            type="password"
+            name="password"
+            [(ngModel)]="password"
+            placeholder="Ingresa tu contraseña"
+            [disabled]="loading()"
+            class="block w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
+        <button
+          type="submit"
+          [disabled]="!email || !password || loading()"
+          class="w-full inline-flex items-center justify-center px-5 py-2.5 text-base font-medium rounded-lg transition-all duration-200 bg-blue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          @if (loading()) {
+            <span>Cargando...</span>
+          } @else {
+            <span>Iniciar Sesión</span>
+          }
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

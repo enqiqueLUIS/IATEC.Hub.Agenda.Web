@@ -1,0 +1,109 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Header -->
+  <nav class="bg-white shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16">
+        <div class="flex items-center">
+          <h1 class="text-xl font-bold text-gray-900">Sistema de Agenda</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="text-sm text-gray-700">{{ authService.currentUser()?.name }}</span>
+          <button
+            (click)="navigateToEvents()"
+            class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
+          >
+            Eventos
+          </button>
+          <button
+            (click)="navigateToInvitations()"
+            class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
+          >
+            Invitaciones
+          </button>
+          <button
+            (click)="logout()"
+            class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-md"
+          >
+            Cerrar Sesión
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="px-4 py-6 sm:px-0">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6">Dashboard</h2>
+
+      @if (loading()) {
+        <div class="text-center py-12">
+          <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+          <p class="mt-2 text-sm text-gray-600">Cargando...</p>
+        </div>
+      }
+
+      @if (!loading()) {
+        <!-- Eventos en Curso -->
+        <div class="mb-8">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Eventos en Curso</h3>
+          @if (ongoingEvents().length === 0) {
+            <div class="bg-white rounded-lg shadow p-6 text-center">
+              <p class="text-gray-500">No hay eventos en curso</p>
+            </div>
+          } @else {
+            <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              @for (event of ongoingEvents(); track event.id) {
+                <div class="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
+                  <div class="flex items-center gap-2 mb-2">
+                    <h4 class="text-lg font-semibold text-gray-900">{{ event.title }}</h4>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
+                      [class]="event.eventType === 'Exclusive' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'">
+                      {{ event.eventType === 'Exclusive' ? 'Exclusivo' : 'Compartido' }}
+                    </span>
+                  </div>
+                  <p class="text-sm text-gray-600 mb-3">{{ event.description }}</p>
+                  <div class="text-xs text-gray-500 space-y-1">
+                    <p><span class="font-medium">Creado por:</span> {{ event.creatorName }}</p>
+                    <p><span class="font-medium">Inicio:</span> {{ event.startDate | date:'short' }}</p>
+                    <p><span class="font-medium">Fin:</span> {{ event.endDate | date:'short' }}</p>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Próximos Eventos -->
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Próximos Eventos</h3>
+          @if (upcomingEvents().length === 0) {
+            <div class="bg-white rounded-lg shadow p-6 text-center">
+              <p class="text-gray-500">No hay próximos eventos</p>
+            </div>
+          } @else {
+            <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              @for (event of upcomingEvents(); track event.id) {
+                <div class="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
+                  <div class="flex items-center gap-2 mb-2">
+                    <h4 class="text-lg font-semibold text-gray-900">{{ event.title }}</h4>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
+                      [class]="event.eventType === 'Exclusive' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'">
+                      {{ event.eventType === 'Exclusive' ? 'Exclusivo' : 'Compartido' }}
+                    </span>
+                  </div>
+                  <p class="text-sm text-gray-600 mb-3">{{ event.description }}</p>
+                  <div class="text-xs text-gray-500 space-y-1">
+                    <p><span class="font-medium">Creado por:</span> {{ event.creatorName }}</p>
+                    <p><span class="font-medium">Inicio:</span> {{ event.startDate | date:'short' }}</p>
+                    <p><span class="font-medium">Fin:</span> {{ event.endDate | date:'short' }}</p>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>
