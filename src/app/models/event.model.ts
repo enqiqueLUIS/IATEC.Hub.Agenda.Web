@@ -1,13 +1,12 @@
 export interface Event {
   id: number;
+  createdBy: number;
   title: string;
   description: string;
   startDate: string;
   endDate: string;
   eventType: string;
   location?: string;
-  organizerId: number;
-  organizer?: { id: number; name: string; email: string };
 }
 
 export interface CreateEventRequest {
@@ -20,6 +19,7 @@ export interface CreateEventRequest {
 }
 
 export interface UpdateEventRequest {
+  id: number;
   title: string;
   description: string;
   startDate: string;

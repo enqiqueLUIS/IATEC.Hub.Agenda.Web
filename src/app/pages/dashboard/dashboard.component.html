@@ -2,69 +2,73 @@
   <!-- Header -->
   <nav class="bg-white shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between h-16">
+      <div class="flex justify-between items-center h-14 sm:h-16">
         <div class="flex items-center">
-          <h1 class="text-xl font-bold text-gray-900">Sistema de Agenda</h1>
+          <h1 class="text-base sm:text-xl font-bold text-gray-900">Sistema de Agenda</h1>
         </div>
-        <div class="flex items-center space-x-4">
-          <span class="text-sm text-gray-700">{{ authService.currentUser()?.name }}</span>
-          <button
-            (click)="navigateToEvents()"
-            class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
+        <div class="flex items-center gap-2 sm:gap-4">
+          <span class="hidden sm:inline text-xs sm:text-sm text-gray-700">{{ authService.currentUser()?.name }}</span>
+          <app-button
+            (clicked)="navigateToEvents()"
+            variant="ghost"
+            size="sm"
           >
-            Eventos
-          </button>
-          <button
-            (click)="navigateToInvitations()"
-            class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
+            <span class="hidden sm:inline">Eventos</span>
+            <span class="inline sm:hidden">Ev.</span>
+          </app-button>
+          <app-button
+            (clicked)="navigateToInvitations()"
+            variant="ghost"
+            size="sm"
           >
-            Invitaciones
-          </button>
-          <button
-            (click)="logout()"
-            class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-md"
+            <span class="hidden sm:inline">Invitaciones</span>
+            <span class="inline sm:hidden">Inv.</span>
+          </app-button>
+          <app-button
+            (clicked)="logout()"
+            variant="danger"
+            size="sm"
           >
-            Cerrar Sesión
-          </button>
+            <span class="hidden sm:inline">Cerrar Sesión</span>
+            <span class="inline sm:hidden">Salir</span>
+          </app-button>
         </div>
       </div>
     </div>
   </nav>
 
   <!-- Main Content -->
-  <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-    <div class="px-4 py-6 sm:px-0">
-      <h2 class="text-2xl font-bold text-gray-900 mb-6">Dashboard</h2>
+  <div class="max-w-7xl mx-auto py-4 sm:py-6 px-4 sm:px-6 lg:px-8">
+    <div class="sm:px-0">
 
       @if (loading()) {
-        <div class="text-center py-12">
-          <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-          <p class="mt-2 text-sm text-gray-600">Cargando...</p>
-        </div>
+        <app-spinner [text]="spinnerText" [size]="spinnerSize" [centered]="spinnerCentered"></app-spinner>
       }
 
       @if (!loading()) {
         <!-- Eventos en Curso -->
-        <div class="mb-8">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">Eventos en Curso</h3>
+        <div class="mb-6 sm:mb-8">
+          <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">Eventos en Curso</h3>
           @if (ongoingEvents().length === 0) {
-            <div class="bg-white rounded-lg shadow p-6 text-center">
-              <p class="text-gray-500">No hay eventos en curso</p>
+            <div class="bg-white rounded-lg shadow p-4 sm:p-6 text-center">
+              <p class="text-sm sm:text-base text-gray-500">No hay eventos en curso</p>
             </div>
           } @else {
-            <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div class="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               @for (event of ongoingEvents(); track event.id) {
-                <div class="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
-                  <div class="flex items-center gap-2 mb-2">
-                    <h4 class="text-lg font-semibold text-gray-900">{{ event.title }}</h4>
-                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
+                <div class="bg-white rounded-lg shadow p-4 sm:p-6 border-l-4 border-green-500">
+                  <div class="flex items-center gap-2 mb-2 flex-wrap">
+                    <h4 class="text-base sm:text-lg font-semibold text-gray-900 truncate flex-1 min-w-0">{{ event.title }}</h4>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium flex-shrink-0"
                       [class]="event.eventType === 'Exclusive' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'">
                       {{ event.eventType === 'Exclusive' ? 'Exclusivo' : 'Compartido' }}
                     </span>
                   </div>
-                  <p class="text-sm text-gray-600 mb-3">{{ event.description }}</p>
+                  <div class="mb-2 sm:mb-3 overflow-hidden group relative">
+                    <p class="text-xs sm:text-sm text-gray-600 whitespace-nowrap group-hover:animate-marquee">{{ event.description }}</p>
+                  </div>
                   <div class="text-xs text-gray-500 space-y-1">
-                    <p><span class="font-medium">Creado por:</span> {{ event.creatorName }}</p>
+                    <p class="truncate"><span class="font-medium">Creado por:</span> {{ event.creatorName }}</p>
                     <p><span class="font-medium">Inicio:</span> {{ event.startDate | date:'short' }}</p>
                     <p><span class="font-medium">Fin:</span> {{ event.endDate | date:'short' }}</p>
                   </div>
@@ -76,25 +80,27 @@
 
         <!-- Próximos Eventos -->
         <div>
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">Próximos Eventos</h3>
+          <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">Próximos Eventos</h3>
           @if (upcomingEvents().length === 0) {
-            <div class="bg-white rounded-lg shadow p-6 text-center">
-              <p class="text-gray-500">No hay próximos eventos</p>
+            <div class="bg-white rounded-lg shadow p-4 sm:p-6 text-center">
+              <p class="text-sm sm:text-base text-gray-500">No hay próximos eventos</p>
             </div>
           } @else {
-            <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div class="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               @for (event of upcomingEvents(); track event.id) {
-                <div class="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
-                  <div class="flex items-center gap-2 mb-2">
-                    <h4 class="text-lg font-semibold text-gray-900">{{ event.title }}</h4>
-                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
+                <div class="bg-white rounded-lg shadow p-4 sm:p-6 border-l-4 border-blue-500">
+                  <div class="flex items-center gap-2 mb-2 flex-wrap">
+                    <h4 class="text-base sm:text-lg font-semibold text-gray-900 truncate flex-1 min-w-0">{{ event.title }}</h4>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium flex-shrink-0"
                       [class]="event.eventType === 'Exclusive' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'">
                       {{ event.eventType === 'Exclusive' ? 'Exclusivo' : 'Compartido' }}
                     </span>
                   </div>
-                  <p class="text-sm text-gray-600 mb-3">{{ event.description }}</p>
+                  <div class="mb-2 sm:mb-3 overflow-hidden group relative">
+                    <p class="text-xs sm:text-sm text-gray-600 whitespace-nowrap group-hover:animate-marquee">{{ event.description }}</p>
+                  </div>
                   <div class="text-xs text-gray-500 space-y-1">
-                    <p><span class="font-medium">Creado por:</span> {{ event.creatorName }}</p>
+                    <p class="truncate"><span class="font-medium">Creado por:</span> {{ event.creatorName }}</p>
                     <p><span class="font-medium">Inicio:</span> {{ event.startDate | date:'short' }}</p>
                     <p><span class="font-medium">Fin:</span> {{ event.endDate | date:'short' }}</p>
                   </div>

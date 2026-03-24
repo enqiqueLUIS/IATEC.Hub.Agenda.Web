@@ -7,4 +7,3 @@ export { ModalComponent } from './modal.component';
 export { CardComponent } from './card.component';
 export { BadgeComponent } from './badge.component';
 export { SpinnerComponent } from './spinner.component';
-export { AlertComponent } from './alert.component';

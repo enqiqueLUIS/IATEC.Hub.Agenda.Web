@@ -3,6 +3,7 @@ import {
   ElementRef, HostListener
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ReplaySubject } from 'rxjs';
 
 export type ToastType = 'success' | 'error' | 'info' | 'warning' | 'update' | 'delete';
@@ -57,6 +58,8 @@ export class ToastComponent implements OnInit, OnDestroy {
   @Input() actionText?: string;
   @Input() action?: () => void;
 
+  constructor(private sanitizer: DomSanitizer) {}
+
   progress = 100;
   paused = false;
 
@@ -102,7 +105,7 @@ export class ToastComponent implements OnInit, OnDestroy {
     return this.paused ? 'none' : `width ${this.remaining}ms linear`;
   }
 
-  get svgIcon(): string {
+  get svgIcon(): SafeHtml {
     const icons: Record<ToastType, string> = {
       success: `<svg class="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>`,
       error:   `<svg class="w-5 h-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>`,
@@ -111,7 +114,7 @@ export class ToastComponent implements OnInit, OnDestroy {
       update:  `<svg class="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582M20 20v-5h-.582M4.582 9A8 8 0 0120 12M19.418 15A8 8 0 014 12"/></svg>`,
       delete:  `<svg class="w-5 h-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7V4h6v3M3 7h18"/></svg>`,
     };
-    return icons[this.type];
+    return this.sanitizer.bypassSecurityTrustHtml(icons[this.type]);
   }
 
   ngOnInit(): void {

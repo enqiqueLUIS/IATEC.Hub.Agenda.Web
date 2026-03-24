@@ -6,11 +6,12 @@ import { EventService } from '../../services/event.service';
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../shared/toast/toast.service';
 import { Event, CreateEventRequest, UpdateEventRequest } from '../../models/event.model';
+import { ButtonComponent, ModalComponent, SpinnerComponent } from '../../shared/components';
 
 @Component({
   selector: 'app-events',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ButtonComponent, ModalComponent, SpinnerComponent],
   templateUrl: './events.component.html'
 })
 export class EventsComponent implements OnInit {
@@ -18,6 +19,10 @@ export class EventsComponent implements OnInit {
   loading = signal(true);
   showModal = signal(false);
   editMode = signal(false);
+  filterDate = signal('');
+  searchCriteria = signal('');
+  showConfirmDelete = signal(false);
+  eventToDeleteId = signal<number | null>(null);
 
   currentEventId = signal<number | null>(null);
   title = signal('');
@@ -26,6 +31,10 @@ export class EventsComponent implements OnInit {
   endDate = signal('');
   eventType = signal('Shared');
   location = signal('');
+
+  spinnerText = signal('Cargando...');
+  spinnerSize = signal<'xs' | 'sm' | 'md' | 'lg' | 'xl'>('md');
+  spinnerCentered = signal(true);
 
   get minDate(): string {
     const tomorrow = new Date();
@@ -47,7 +56,7 @@ export class EventsComponent implements OnInit {
 
   loadEvents(): void {
     this.loading.set(true);
-    this.eventService.getAll().subscribe({
+    this.eventService.getAll(this.filterDate() || undefined, this.searchCriteria() || undefined).subscribe({
       next: (data) => {
         this.events.set(data);
         this.loading.set(false);
@@ -57,6 +66,12 @@ export class EventsComponent implements OnInit {
         this.loading.set(false);
       }
     });
+  }
+
+  clearFilters(): void {
+    this.filterDate.set('');
+    this.searchCriteria.set('');
+    this.loadEvents();
   }
 
   openCreateModal(): void {
@@ -123,6 +138,7 @@ export class EventsComponent implements OnInit {
     if (!id) return;
 
     const request: UpdateEventRequest = {
+      id,
       title: this.title(),
       description: this.description(),
       startDate: new Date(this.startDate()).toISOString(),
@@ -131,7 +147,7 @@ export class EventsComponent implements OnInit {
       location: this.location() || undefined
     };
 
-    this.eventService.update(id, request).subscribe({
+    this.eventService.update(request).subscribe({
       next: () => {
         this.closeModal();
         this.loadEvents();
@@ -145,8 +161,14 @@ export class EventsComponent implements OnInit {
   }
 
   deleteEvent(id: number): void {
-    if (!confirm('¿Estás seguro de eliminar este evento?')) return;
+    this.eventToDeleteId.set(id);
+    this.showConfirmDelete.set(true);
+  }
 
+  confirmDelete(): void {
+    const id = this.eventToDeleteId();
+    if (!id) return;
+    this.showConfirmDelete.set(false);
     this.eventService.delete(id).subscribe({
       next: () => {
         this.loadEvents();
@@ -156,6 +178,11 @@ export class EventsComponent implements OnInit {
         this.toast.error('Error al eliminar el evento.');
       }
     });
+  }
+
+  cancelDelete(): void {
+    this.showConfirmDelete.set(false);
+    this.eventToDeleteId.set(null);
   }
 
   goToDashboard(): void {

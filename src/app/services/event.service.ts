@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
@@ -18,8 +18,11 @@ export class EventService {
 
   constructor(private http: HttpClient) {}
 
-  getAll(): Observable<Event[]> {
-    return this.http.get<ApiResponse<Event[]>>(this.apiUrl).pipe(map(r => r.data ?? []));
+  getAll(filterDate?: string, searchCriteria?: string): Observable<Event[]> {
+    let params = new HttpParams();
+    if (filterDate) params = params.set('filterDate', filterDate);
+    if (searchCriteria) params = params.set('searchCriteria', searchCriteria);
+    return this.http.get<ApiResponse<Event[]>>(this.apiUrl, { params }).pipe(map(r => r.data ?? []));
   }
 
   getById(id: number): Observable<Event> {
@@ -30,8 +33,8 @@ export class EventService {
     return this.http.post<ApiResponse<Event>>(this.apiUrl, event).pipe(map(r => r.data));
   }
 
-  update(id: number, event: UpdateEventRequest): Observable<void> {
-    return this.http.put<ApiResponse<void>>(`${this.apiUrl}/${id}`, event).pipe(map(r => r.data));
+  update(event: UpdateEventRequest): Observable<void> {
+    return this.http.put<ApiResponse<void>>(this.apiUrl, event).pipe(map(r => r.data));
   }
 
   delete(id: number): Observable<void> {

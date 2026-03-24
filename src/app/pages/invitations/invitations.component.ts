@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -10,11 +10,12 @@ import { ToastService } from '../../shared/toast/toast.service';
 import { Invitation, SendInvitationRequest } from '../../models/invitation.model';
 import { Event } from '../../models/event.model';
 import { User } from '../../models/user.model';
+import { ButtonComponent, SpinnerComponent, type SelectOption } from '../../shared/components';
 
 @Component({
   selector: 'app-invitations',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ButtonComponent, SpinnerComponent],
   templateUrl: './invitations.component.html'
 })
 export class InvitationsComponent implements OnInit {
@@ -26,6 +27,29 @@ export class InvitationsComponent implements OnInit {
 
   selectedEventId = signal<number | null>(null);
   selectedUserId = signal<number | null>(null);
+
+  eventOptions = computed<SelectOption[]>(() =>
+    this.events().map(event => ({ value: event.id, label: event.title }))
+  );
+
+  userOptions = computed<SelectOption[]>(() =>
+    this.users().map(user => ({ value: user.id, label: `${user.name} (${user.email})` }))
+  );
+
+  // Signals for SelectComponent
+  eventLabel = signal('Evento');
+  eventPlaceholder = signal('Selecciona un evento');
+  userLabel = signal('Usuario');
+  userPlaceholder = signal('Selecciona un usuario');
+  selectSize = signal<'sm' | 'md' | 'lg'>('md');
+
+  selectedEventValue = computed(() => this.selectedEventId()?.toString() || '');
+  selectedUserValue = computed(() => this.selectedUserId()?.toString() || '');
+
+  // Signals for SpinnerComponent
+  spinnerText = signal('Cargando...');
+  spinnerSize = signal<'xs' | 'sm' | 'md' | 'lg' | 'xl'>('md');
+  spinnerCentered = signal(true);
 
   constructor(
     private invitationService: InvitationService,

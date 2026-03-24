@@ -19,7 +19,7 @@ type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
         ></div>
 
         <!-- Modal Container -->
-        <div class="flex min-h-screen items-center justify-center p-4">
+        <div class="flex min-h-screen items-end sm:items-center justify-center p-4">
           <div
             [class]="getModalClasses"
             class="relative transform overflow-hidden rounded-xl bg-white shadow-2xl transition-all duration-300"
@@ -28,9 +28,9 @@ type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
           >
             <!-- Header -->
             @if (title || showCloseButton) {
-              <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+              <div class="flex items-center justify-between border-b border-gray-200 px-4 sm:px-6 py-3 sm:py-4">
                 @if (title) {
-                  <h3 id="modal-title" class="text-lg font-semibold text-gray-900">
+                  <h3 id="modal-title" class="text-base sm:text-lg font-semibold text-gray-900">
                     {{ title }}
                   </h3>
                 }
@@ -55,7 +55,7 @@ type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
 
             <!-- Footer -->
             @if (showFooter) {
-              <div class="border-t border-gray-200 bg-gray-50 px-6 py-4">
+              <div class="border-t border-gray-200 bg-gray-50 px-4 sm:px-6 py-3 sm:py-4">
                 <ng-content select="[modal-footer]"></ng-content>
               </div>
             }
@@ -98,7 +98,7 @@ export class ModalComponent {
   }
 
   get getBodyClasses(): string {
-    const baseClasses = 'px-6 py-4';
+    const baseClasses = 'px-4 sm:px-6 py-3 sm:py-4';
     return baseClasses;
   }
 }
