@@ -85,13 +85,11 @@ export class TextareaComponent {
   private touched = signal(false);
   errorMessage = signal<string | null>(null);
 
-  constructor() {
-    effect(() => {
-      if (this.touched()) {
-        this.validate();
-      }
-    });
-  }
+  #validateEffect = effect(() => {
+    if (this.touched()) {
+      this.validate();
+    }
+  });
 
   onInputChange(event: Event): void {
     const target = event.target as HTMLTextAreaElement;

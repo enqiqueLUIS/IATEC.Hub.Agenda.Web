@@ -1,9 +1,9 @@
 import {
   Injectable, ApplicationRef, EnvironmentInjector,
-  createComponent, ComponentRef
+  createComponent, ComponentRef, inject
 } from '@angular/core';
 import { ReplaySubject, Observable } from 'rxjs';
-import { ToastComponent, ToastType } from './toast.component';
+import { ToastComponent, ToastType } from './toast';
 
 export interface ToastConfig {
   duration?: number;
@@ -14,13 +14,11 @@ export interface ToastConfig {
 
 @Injectable({ providedIn: 'root' })
 export class ToastService {
+  private appRef = inject(ApplicationRef);
+  private injector = inject(EnvironmentInjector);
+
   private container?: HTMLElement;
   private toasts: ComponentRef<ToastComponent>[] = [];
-
-  constructor(
-    private appRef: ApplicationRef,
-    private injector: EnvironmentInjector
-  ) {}
 
   open(title: string, message: string, cfg?: ToastConfig): Observable<void> {
     const ref = createComponent(ToastComponent, { environmentInjector: this.injector });

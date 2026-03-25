@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -16,9 +16,16 @@ import { ButtonComponent, SpinnerComponent, type SelectOption } from '../../shar
   selector: 'app-invitations',
   standalone: true,
   imports: [CommonModule, FormsModule, ButtonComponent, SpinnerComponent],
-  templateUrl: './invitations.component.html'
+  templateUrl: './invitations.html'
 })
 export class InvitationsComponent implements OnInit {
+  private invitationService = inject(InvitationService);
+  private eventService = inject(EventService);
+  private userService = inject(UserService);
+  public authService = inject(AuthService);
+  private router = inject(Router);
+  private toast = inject(ToastService);
+
   invitations = signal<Invitation[]>([]);
   events = signal<Event[]>([]);
   users = signal<User[]>([]);
@@ -50,15 +57,6 @@ export class InvitationsComponent implements OnInit {
   spinnerText = signal('Cargando...');
   spinnerSize = signal<'xs' | 'sm' | 'md' | 'lg' | 'xl'>('md');
   spinnerCentered = signal(true);
-
-  constructor(
-    private invitationService: InvitationService,
-    private eventService: EventService,
-    private userService: UserService,
-    public authService: AuthService,
-    private router: Router,
-    private toast: ToastService
-  ) {}
 
   ngOnInit(): void {
     this.loadData();

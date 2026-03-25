@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -14,9 +14,8 @@ interface ApiResponse<T> {
   providedIn: 'root'
 })
 export class UserService {
+  private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/users`;
-
-  constructor(private http: HttpClient) {}
 
   getAll(): Observable<User[]> {
     return this.http.get<ApiResponse<User[]>>(this.apiUrl).pipe(map(r => r.data ?? []));

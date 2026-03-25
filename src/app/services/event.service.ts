@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -14,9 +14,8 @@ interface ApiResponse<T> {
   providedIn: 'root'
 })
 export class EventService {
+  private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/events`;
-
-  constructor(private http: HttpClient) {}
 
   getAll(filterDate?: string, searchCriteria?: string): Observable<Event[]> {
     let params = new HttpParams();

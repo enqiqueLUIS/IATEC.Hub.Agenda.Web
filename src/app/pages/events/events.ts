@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -12,9 +12,14 @@ import { ButtonComponent, ModalComponent, SpinnerComponent } from '../../shared/
   selector: 'app-events',
   standalone: true,
   imports: [CommonModule, FormsModule, ButtonComponent, ModalComponent, SpinnerComponent],
-  templateUrl: './events.component.html'
+  templateUrl: './events.html'
 })
 export class EventsComponent implements OnInit {
+  private eventService = inject(EventService);
+  public authService = inject(AuthService);
+  private router = inject(Router);
+  private toast = inject(ToastService);
+
   events = signal<Event[]>([]);
   loading = signal(true);
   showModal = signal(false);
@@ -42,13 +47,6 @@ export class EventsComponent implements OnInit {
     tomorrow.setHours(0, 0, 0, 0);
     return tomorrow.toISOString().substring(0, 16);
   }
-
-  constructor(
-    private eventService: EventService,
-    public authService: AuthService,
-    private router: Router,
-    private toast: ToastService
-  ) {}
 
   ngOnInit(): void {
     this.loadEvents();

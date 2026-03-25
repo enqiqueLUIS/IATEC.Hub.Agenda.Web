@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { DashboardService } from '../../services/dashboard.service';
@@ -11,9 +11,14 @@ import { ButtonComponent, SpinnerComponent } from '../../shared/components';
   selector: 'app-dashboard',
   standalone: true,
   imports: [CommonModule, ButtonComponent, SpinnerComponent],
-  templateUrl: './dashboard.component.html'
+  templateUrl: './dashboard.html'
 })
 export class DashboardComponent implements OnInit {
+  private dashboardService = inject(DashboardService);
+  public authService = inject(AuthService);
+  private router = inject(Router);
+  private toast = inject(ToastService);
+
   ongoingEvents = signal<DashboardEvent[]>([]);
   upcomingEvents = signal<DashboardEvent[]>([]);
   loading = signal(true);
@@ -22,13 +27,6 @@ export class DashboardComponent implements OnInit {
   spinnerText = signal('Cargando...');
   spinnerSize = signal<'xs' | 'sm' | 'md' | 'lg' | 'xl'>('md');
   spinnerCentered = signal(true);
-
-  constructor(
-    private dashboardService: DashboardService,
-    public authService: AuthService,
-    private router: Router,
-    private toast: ToastService
-  ) {}
 
   ngOnInit(): void {
     this.loadDashboard();

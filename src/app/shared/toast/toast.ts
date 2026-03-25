@@ -1,6 +1,5 @@
 import {
-  Component, Input, OnInit, OnDestroy,
-  ElementRef, HostListener
+  Component, Input, OnInit, OnDestroy, inject
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -58,7 +57,7 @@ export class ToastComponent implements OnInit, OnDestroy {
   @Input() actionText?: string;
   @Input() action?: () => void;
 
-  constructor(private sanitizer: DomSanitizer) {}
+  private sanitizer = inject(DomSanitizer);
 
   progress = 100;
   paused = false;

@@ -1,9 +1,9 @@
-export { InputComponent } from './input.component';
-export { SelectComponent } from './select.component';
-export type { SelectOption } from './select.component';
-export { ButtonComponent } from './button.component';
-export { TextareaComponent } from './textarea.component';
-export { ModalComponent } from './modal.component';
-export { CardComponent } from './card.component';
-export { BadgeComponent } from './badge.component';
-export { SpinnerComponent } from './spinner.component';
+export { InputComponent } from './input';
+export { SelectComponent } from './select';
+export type { SelectOption } from './select';
+export { ButtonComponent } from './button';
+export { TextareaComponent } from './textarea';
+export { ModalComponent } from './modal';
+export { CardComponent } from './card';
+export { BadgeComponent } from './badge';
+export { SpinnerComponent } from './spinner';

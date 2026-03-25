@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth.guard';
-import { LoginComponent } from './pages/login/login.component';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { EventsComponent } from './pages/events/events.component';
-import { InvitationsComponent } from './pages/invitations/invitations.component';
+import { LoginComponent } from './pages/login/login';
+import { DashboardComponent } from './pages/dashboard/dashboard';
+import { EventsComponent } from './pages/events/events';
+import { InvitationsComponent } from './pages/invitations/invitations';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
