@@ -30,7 +30,8 @@
           name="email"
           label="Email"
           placeholder="admin@agenda.com"
-          [(ngModel)]="email"
+          [value]="email"
+          (valueChange)="email = $event"
           [disabled]="loading()"
           size="md"
         ></app-input>
@@ -40,7 +41,8 @@
           name="password"
           label="Contraseña"
           placeholder="Ingresa tu contraseña"
-          [(ngModel)]="password"
+          [value]="password"
+          (valueChange)="password = $event"
           [disabled]="loading()"
           size="md"
         ></app-input>
